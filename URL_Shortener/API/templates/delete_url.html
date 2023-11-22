@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Shortened URL</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="font-sans text-center bg-gray-100 p-8">
+    <h2 class="text-2xl font-bold mb-4">Want to delete a shortened URL?</h2>
+    <form id="delete-form" method="POST" action="/delete-url" class="max-w-md mx-auto">
+        <label for="short-url-to-delete" class="block text-gray-700 text-sm font-bold mb-2">
+            Enter the Short URL to delete:
+        </label>
+        <input type="text" id="short-url-to-delete" name="short-url-to-delete"
+               class="w-full border rounded py-2 px-3 mb-4" required>
+        <button id="delete-button" type="submit"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            Delete Short URL
+        </button>
+    </form>
+</body>
+
+</html>
+

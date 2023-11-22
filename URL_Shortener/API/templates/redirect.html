@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="text-center font-serif bg-gray-100">
+
+    <h1 class="text-4xl font-bold my-4 text-blue-500">Redirect to Original URL</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="text-red-500">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if error %}
+        <p class="text-red-500">{{ error }}</p>
+    {% endif %}
+
+    <form action="/redirect" method="post" class="my-8">
+        <label for="shortURL" class="text-lg">Enter Short URL:</label>
+        <input type="text" name="shortURL" id="shortURL" required
+               class="px-5 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">Go to Original URL</button>
+    </form>
+
+    <h2 class="text-2xl font-bold my-4 text-blue-500">Generate QR Code</h2>
+    <form action="/generate-qr-code" method="post" class="my-8">
+        <label for="full_short_url" class="text-lg">Enter Short URL:</label>
+        <input type="text" name="full_short_url" id="full_short_url" required
+               class="px-5 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">Generate QR Code</button>
+    </form>
+
+    {% if qr_image %}
+        <h2 class="text-2xl font-bold my-4 text-blue-500">Generated QR Code</h2>
+        <img src="{{ url_for('static', filename='qr_codes/1_qr_code.png') }}" alt="Generated QR Code"
+             class="w-40 mx-auto mb-8">
+        <p class="text-gray-700">Scan the code to go to your original URL</p>
+    {% endif %}
+
+</body>
+</html>

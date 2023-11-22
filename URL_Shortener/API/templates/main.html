@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <title>URL SHORTENER</title>
+</head>
+
+<body class="text-center font-sans bg-gray-100">
+    <div class="container mx-auto my-24 p-8 bg-white rounded-lg shadow-md">
+
+        <h1 class="text-4xl font-bold mb-8 text-blue-600">Welcome to URL Shortener</h1>
+
+        <div class="flex justify-center space-x-4">
+            <!-- Sign Up Box -->
+            <div class="bg-blue-200 p-4 rounded-md">
+                <a href="{{ url_for('signup') }}" class="btn">Sign Up</a>
+            </div>
+
+            <!-- Sign In Box -->
+            <div class="bg-green-200 p-4 rounded-md">
+                <a href="{{ url_for('signin') }}" class="btn">Sign In</a>
+            </div>
+        </div>
+
+        <p class="mt-8 text-gray-700">Shorten your URLs easily and experience the power of concise links!</p>
+    </div>
+</body>
+
+</html>

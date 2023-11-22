@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test URL in Database</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="text-center font-serif bg-gray-100">
+
+    <h1 class="text-4xl font-bold my-8 text-blue-500">Test URL in Database</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul>
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <form action="/test-url" method="post" class="my-8">
+        <label for="test-url" class="text-lg">Enter Short URL:</label>
+        <input type="text" name="test-url" id="test-url" required
+               class="px-5 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">Test URL</button>
+    </form>
+
+</body>
+
+</html>

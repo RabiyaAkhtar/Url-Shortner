@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Add your meta tags, title, and Tailwind CSS link here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Success</title> <!-- Add a title for the page -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="font-sans flex flex-col items-center h-screen bg-gray-100">
+    <div class="signup-success my-8 p-8 bg-white rounded-lg shadow-md max-w-md w-full"> <!-- Added max-width for better responsiveness -->
+        <h1 class="text-4xl font-bold mb-4 text-green-600">Signup Successful!</h1>
+        <p class="text-gray-700">Thank you for signing up. What would you like to do next?</p>
+
+        <div class="mt-4"> <!-- Added margin-top for spacing -->
+            <a href="/signin" class="text-blue-500 my-2 inline-block">Sign In</a> <!-- Made the links inline-block for better spacing -->
+            <span class="mx-2 text-gray-500">or</span> <!-- Added a gray color to the "or" text -->
+            <a href="/" class="text-blue-500 my-2 inline-block">Go to Home Page</a>
+        </div>
+    </div>
+</body>
+
+</html>

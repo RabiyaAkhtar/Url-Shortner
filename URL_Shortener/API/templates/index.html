@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>URL SHORTENER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS for styling -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <!-- Custom styles -->
+    <style>
+
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto; /* Slightly adjusted margin */
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .short-url-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .function-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .function-link {
+            background-color: #3490dc;
+            color: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .function-link:hover {
+            background-color: #2779bd;
+        }
+
+        .logout-btn {
+            display: block;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .copy-btn {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container">
+        <!-- URL Shortener Form -->
+        <div class="form-container">
+            <h1 class="text-4xl font-bold mb-4 text-blue-500">URL Shortener</h1>
+            <!-- Flash messages for errors or notifications -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div id="flash-messages" class="text-red-500">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <!-- Form for shortening URLs -->
+            <form method="POST" action="/shorten-url" onsubmit="return validateForm()">
+                <input type="text" name="original_url" placeholder="Original URL" required
+                    class="px-5 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500 mb-4 block w-full">
+                <input type="text" name="custom_short_code" pattern="[A-Z]{6}"
+                    title="Custom code should contain exactly 6 capital letters" placeholder="Custom Short Code"
+                    id="customShortCode"
+                    class="px-5 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500 mb-4 block w-full">
+                <button type="submit"
+                    class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer w-full">Shorten URL</button>
+            </form>
+
+            <!-- Display flash message if there's one -->
+            {% if flash_message %}
+            <div id="flash-message" class="text-red-500 my-4">
+                <p>{{ flash_message }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Shortened URL section -->
+        <div class="short-url-container">
+            <p class="text-gray-700">Your shortened URL is: <span
+                    id="shortUrl">{{ short_url }}</span></p>
+            <button onclick="copyToClipboard()" class="copy-btn">Copy Link</button>
+        </div>
+
+        <!-- Function links section -->
+        <div class="function-links">
+            <!-- Test URL -->
+            <a href="/test-url" class="function-link">Test URL</a>
+            <!-- Redirect -->
+            <a href="/redirect" class="function-link">Redirect</a>
+            <!-- List URLs -->
+            <a href="/list-urls" class="function-link">List URLs</a>
+            <!-- Delete URL -->
+            <a href="/delete-url" class="function-link">Delete URL</a>
+        </div>
+
+        <!-- Logout section -->
+        <div class="logout-btn">
+            <h2 class="text-2xl font-bold text-blue-500">Want to LOG OUT?</h2>
+            <a href="/logout"><button class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">Log Out</button></a>
+        </div>
+    </div>
+
+
+    <!-- JavaScript to handle copying to clipboard -->
+    <script>
+        function copyToClipboard() {
+            var shortUrl = document.getElementById("shortUrl");
+            var tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.value = shortUrl.textContent;
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Copied the link: " + shortUrl.textContent);
+        }
+    </script>
+</body>
+
+</html>
