@@ -216,69 +216,60 @@ def urlshortner():
     return render_template('index.html')  # Renders the index.html template, displaying the URL shortener page.
 
 
-@app.route('/shorten-url', methods=['POST'])  # Shorten url endpoint route
+@app.route('/shorten-url', methods=['POST'])
 @login_required
 def shorten_url_endpoint():
-    if request.method == "POST":  # Handling form submission if method is POST
+    user_id = session.get('user_id')
 
-        # Retrieving user input (original URL and custom short code) from the form.
-        original_url = request.form.get('original_url')
-        custom_short_code = request.form.get('custom_short_code')
+    if not user_id:
+        flash("User not logged in.")
+        return redirect(url_for('signin'))
 
-        user_id = session.get('user_id')  # Retrieves the user's ID from the session.
+    original_url = request.form.get('original_url')
+    custom_short_code = request.form.get('custom_short_code')
 
-        if not user_id:
-            flash("User not logged in.")
-            # Shows an error message and redirects to the signin page if the user is not logged in.
-            return redirect(url_for('signin'))
+    conn = sqlite3.connect('url_shortener.db')
+    cursor = conn.cursor()
 
-        conn = sqlite3.connect('url_shortener.db')
-        cursor = conn.cursor()
+    try:
+        if custom_short_code:
+            check_existing_mapping_query = "SELECT * FROM url_mappings WHERE USER_ID = ? AND SHORT_URL = ?"
+            existing_mapping = cursor.execute(check_existing_mapping_query,
+                                              (user_id, f'https://short-url/{custom_short_code}')).fetchone()
 
-        try:
-            if custom_short_code:  # checks if a custom short code was provided by the user
+            if existing_mapping:
+                flash(f"Short code '{custom_short_code}' is already in use for your account. "
+                      f"Please choose another.")
+                return redirect(request.referrer)
 
-                # database query to check if a mapping with the given custom_short_code already exists for the
-                # specific user
-                check_existing_mapping_query = "SELECT * FROM url_mappings WHERE USER_ID = ? AND SHORT_URL = ?"
-                existing_mapping = cursor.execute(check_existing_mapping_query,
-                                                  (user_id, f'https://short-url/{custom_short_code}')).fetchone()
-                if existing_mapping:
-                    flash(f"Short code '{custom_short_code}' is already in use for your account. "
-                          f"Please choose another.")
-                    return redirect(request.referrer)  # Redirect back to the same page to try again
+        valid_short_code_found = False
+        short_code = custom_short_code or generate_random_short_code()
 
-            # If a random short code or custom code not valid, generate a new one
-            valid_short_code_found = False
-            short_code = custom_short_code or generate_random_short_code()
+        while not valid_short_code_found:
+            existing_mapping = cursor.execute("SELECT * FROM url_mappings WHERE USER_ID = ? AND SHORT_URL = ?",
+                                              (user_id, f'https://short-url/{short_code}')).fetchone()
 
-            while not valid_short_code_found:
-                # Generates a new short code if using a random short code or the custom code is not valid
-                existing_mapping = cursor.execute("SELECT * FROM url_mappings WHERE USER_ID = ? AND SHORT_URL = ?",
-                                                  (user_id, f'https://short-url/{short_code}')).fetchone()
+            if not existing_mapping:
+                valid_short_code_found = True
+            else:
+                short_code = generate_random_short_code()
 
-                if not existing_mapping:
-                    valid_short_code_found = True
-                else:
-                    short_code = generate_random_short_code()
+        short_url = f'https://short-url/{short_code}'
 
-            short_url = f'https://short-url/{short_code}'  # Creates the short URL using the generated short code.
+        insert_mapping_query = "INSERT INTO url_mappings (USER_ID, LONG_URL, SHORT_URL) VALUES (?, ?, ?)"
+        cursor.execute(insert_mapping_query, (user_id, original_url, short_url))
+        conn.commit()
 
-            insert_mapping_query = "INSERT INTO url_mappings (USER_ID, LONG_URL, SHORT_URL) VALUES (?, ?, ?)"
-            cursor.execute(insert_mapping_query, (user_id, original_url, short_url))
-            conn.commit()
+        flash("URL shortened successfully!")
+        return render_template('index.html', short_url=short_url)
 
-            flash("URL shortened successfully!")
-            # Shows a success message, renders the URL shortener page with the shortened URL.
-            return render_template('index.html', short_url=short_url)
+    except sqlite3.Error as e:
+        flash("An error occurred while processing your request.")
+        print("SQLite error:", e)
 
-        except sqlite3.Error as e:
-            flash("An error occurred while processing your request.")
-            print("SQLite error:", e)
-
-        finally:
-            cursor.close()
-            conn.close()
+    finally:
+        cursor.close()
+        conn.close()
 
     return redirect(url_for('signin'))
 
