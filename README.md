@@ -1,4 +1,4 @@
-URL SHORTENER PROJECT:
+URL SHORTENER APP:
 
 
 OVERVIEW:
@@ -12,6 +12,7 @@ URL Testing: Check the existence of short URLs in the database.
 Redirects: Redirect users from short URLs to the original links.
 QR Code Generation: Generate QR codes for short URLs, enhancing accessibility.
 User Management: Robust sign-up and sign-in system storing user information securely in an SQLite database.
+
 User-Specific Actions:
 List all URLs associated with a particular user.
 Delete URLs owned by the authenticated user.
